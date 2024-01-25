@@ -19,11 +19,17 @@ function App() {
   const filteredData = data.filter(obj => {
     return obj.category === selectedCategory || selectedCategory === 'All'
   })
+
+  const sumOfPrices = filteredData.reduce((sum, obj) => {
+    let price = parseFloat(obj.price.slice(1));
+    return sum + price;
+  }, 0);
   
   return (
     <div className="App">
       <h1>React Product List</h1>
       <h2>Currently Selected Category: {selectedCategory}</h2>
+      <h2>Sum of prices for currently selected category: ${sumOfPrices.toFixed(2)}</h2>
       <h3>Categories:</h3>
       <div className="CategoryList">
         <button
@@ -31,7 +37,9 @@ function App() {
           onClick={()=> handleCategoryClick("All")}
           className={ selectedCategory === "All" ? "selected" : ""}
         >
-          All
+          All <div
+            className="Badge"
+          >{data.length}</div>
         </button>
         {namesAndCategories.map((obj, i) => {
           return (
@@ -55,11 +63,13 @@ function App() {
               name={obj.name}
               price={obj.price}
               category={obj.category}
+              rating={obj.rating.toFixed(1)}
+              units={obj.units}
+              outOfStock={obj.units === 0 ? "outOfStock" : ""}
             />
           )
         })}
       </div>
-
     </div>
   );
 }
